@@ -1,0 +1,1 @@
+from blueprints.files.files_blueprint import files_namespace
