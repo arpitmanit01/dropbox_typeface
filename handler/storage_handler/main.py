@@ -55,55 +55,55 @@ class StorageHandler:
             print(str(e))
 
 
-def get_by_id(self, content_unique_id: str):
-    try:
-        c = self.conn.cursor()
-        c.execute(
-            '''
-            SELECT id,filename,mimetype,created_at FROM files AS t
-            WHERE t.id=?
-            ''', (content_unique_id,)
-        )
-        result = c.fetchall()
-        return result
-    except Exception as e:
-        print(str(e))
+    def get_by_id(self, content_unique_id: str):
+        try:
+            c = self.conn.cursor()
+            c.execute(
+                '''
+                SELECT id,filename,mimetype,created_at FROM files AS t
+                WHERE t.id=?
+                ''', (content_unique_id,)
+            )
+            result = c.fetchall()
+            return result
+        except Exception as e:
+            print(str(e))
 
 
-def update_by_id(self, content_unique_id: str, new_file_name: str):
-    try:
-        c = self.conn.cursor()
-        c.execute(
-            '''
-            UPDATE files 
-            SET filename=?
-            WHERE id=?
-            ''', (new_file_name, content_unique_id,)
-        )
-        self.conn.commit()
-        return None
-    except Exception as e:
-        print(str(e))
+    def update_by_id(self, content_unique_id: str, new_file_name: str):
+        try:
+            c = self.conn.cursor()
+            c.execute(
+                '''
+                UPDATE files 
+                SET filename=?
+                WHERE id=?
+                ''', (new_file_name, content_unique_id,)
+            )
+            self.conn.commit()
+            return None
+        except Exception as e:
+            print(str(e))
 
 
-def delete_by_id(self, content_unique_id: str):
-    try:
-        c = self.conn.cursor()
-        c.execute(
-            '''
-            DELETE FROM files AS t
-            WHERE t.id=?
-            ''', (content_unique_id,)
-        )
-        self.conn.commit()
-        return None
-    except Exception as e:
-        print(str(e))
+    def delete_by_id(self, content_unique_id: str):
+        try:
+            c = self.conn.cursor()
+            c.execute(
+                '''
+                DELETE FROM files AS t
+                WHERE t.id=?
+                ''', (content_unique_id,)
+            )
+            self.conn.commit()
+            return None
+        except Exception as e:
+            print(str(e))
 
 
-def close(self):
-    try:
-        """Close the database connection."""
-        self.conn.close()
-    except Exception as e:
-        print(str(e))
+    def close(self):
+        try:
+            """Close the database connection."""
+            self.conn.close()
+        except Exception as e:
+            print(str(e))
