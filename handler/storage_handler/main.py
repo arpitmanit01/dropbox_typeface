@@ -39,7 +39,7 @@ class StorageHandler:
         c = self.conn.cursor()
         c.execute(
             '''
-            SELECT * FROM files
+            SELECT id,filename,mimetype,created_at FROM files
             '''
         )
         result = c.fetchall()
@@ -49,12 +49,35 @@ class StorageHandler:
         c = self.conn.cursor()
         c.execute(
             '''
-            SELECT * FROM files AS t
+            SELECT id,filename,mimetype,created_at FROM files AS t
             WHERE t.id=?
             ''', (content_unique_id,)
         )
         result = c.fetchall()
         return result
+
+    def update_by_id(self, content_unique_id: str,new_file_name:str):
+        c = self.conn.cursor()
+        c.execute(
+            '''
+            UPDATE files 
+            SET filename=?
+            WHERE id=?
+            ''', (new_file_name,content_unique_id,)
+        )
+        self.conn.commit()
+        return None
+
+    def delete_by_id(self, content_unique_id: str):
+        c = self.conn.cursor()
+        c.execute(
+            '''
+            DELETE FROM files AS t
+            WHERE t.id=?
+            ''', (content_unique_id,)
+        )
+        self.conn.commit()
+        return None
 
     def close(self):
         """Close the database connection."""
