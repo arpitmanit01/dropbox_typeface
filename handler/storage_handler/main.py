@@ -17,35 +17,46 @@ class StorageHandler:
         self.create_table()
 
     def create_table(self):
-        """Create the table for storing file metadata and content."""
-        self.cursor.execute('''CREATE TABLE IF NOT EXISTS files (
-                                id TEXT PRIMARY KEY,
-                                filename TEXT NOT NULL,
-                                mimetype TEXT NOT NULL,
-                                size INTEGER NOT NULL,
-                                content BLOB NOT NULL,
-                                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                            )''')
-        self.conn.commit()
+        try:
+            """Create the table for storing file metadata and content."""
+            self.cursor.execute('''CREATE TABLE IF NOT EXISTS files (
+                                    id TEXT PRIMARY KEY,
+                                    filename TEXT NOT NULL,
+                                    mimetype TEXT NOT NULL,
+                                    size INTEGER NOT NULL,
+                                    content BLOB NOT NULL,
+                                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                                )''')
+            self.conn.commit()
+        except Exception as e:
+            print(str(e))
 
-    def add_file(self, file_id, filename, mimetype, size, content):
+    def add_file(self, file_id: str, filename: str, mimetype: str, size: int, content):
         """Add a file to the database."""
-        self.cursor.execute("INSERT INTO files(id,filename,mimetype,size,content)\
-                             VALUES (?,?,?,?,?)",
-                            (file_id, filename, mimetype, size, sqlite3.Binary(content)))
-        self.conn.commit()
+        try:
+            self.cursor.execute("INSERT INTO files(id,filename,mimetype,size,content)\
+                                 VALUES (?,?,?,?,?)",
+                                (file_id, filename, mimetype, size, sqlite3.Binary(content)))
+            self.conn.commit()
+        except Exception as e:
+            print(str(e))
 
     def get_all(self):
-        c = self.conn.cursor()
-        c.execute(
-            '''
-            SELECT id,filename,mimetype,created_at FROM files
-            '''
-        )
-        result = c.fetchall()
-        return result
+        try:
+            c = self.conn.cursor()
+            c.execute(
+                '''
+                SELECT id,filename,mimetype,created_at FROM files
+                '''
+            )
+            result = c.fetchall()
+            return result
+        except Exception as e:
+            print(str(e))
 
-    def get_by_id(self, content_unique_id: str):
+
+def get_by_id(self, content_unique_id: str):
+    try:
         c = self.conn.cursor()
         c.execute(
             '''
@@ -55,20 +66,28 @@ class StorageHandler:
         )
         result = c.fetchall()
         return result
+    except Exception as e:
+        print(str(e))
 
-    def update_by_id(self, content_unique_id: str,new_file_name:str):
+
+def update_by_id(self, content_unique_id: str, new_file_name: str):
+    try:
         c = self.conn.cursor()
         c.execute(
             '''
             UPDATE files 
             SET filename=?
             WHERE id=?
-            ''', (new_file_name,content_unique_id,)
+            ''', (new_file_name, content_unique_id,)
         )
         self.conn.commit()
         return None
+    except Exception as e:
+        print(str(e))
 
-    def delete_by_id(self, content_unique_id: str):
+
+def delete_by_id(self, content_unique_id: str):
+    try:
         c = self.conn.cursor()
         c.execute(
             '''
@@ -78,7 +97,13 @@ class StorageHandler:
         )
         self.conn.commit()
         return None
+    except Exception as e:
+        print(str(e))
 
-    def close(self):
+
+def close(self):
+    try:
         """Close the database connection."""
         self.conn.close()
+    except Exception as e:
+        print(str(e))
